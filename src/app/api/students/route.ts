@@ -41,15 +41,15 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST create new student (Staff only)
+// POST create new student (Staff and Admin)
 export async function POST(request: NextRequest) {
   try {
     const session = await requireAuth();
 
-    // Only staff can add students
-    if (session.role !== 'staff') {
+    // Only staff and admin can add students
+    if (session.role !== 'staff' && session.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Forbidden: Only staff can add students' },
+        { error: 'Forbidden: Only staff and admin can add students' },
         { status: 403 }
       );
     }

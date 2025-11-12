@@ -140,7 +140,7 @@ export default function DashboardPage() {
             >
               Export CSV
             </button>
-            {user.role === 'staff' && (
+            {(user.role === 'staff' || user.role === 'admin') && (
               <button
                 onClick={handleAddStudent}
                 className="flex-1 sm:flex-none px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
