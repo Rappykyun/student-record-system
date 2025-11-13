@@ -1,9 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Student Record Management System
 
-## Getting Started
+A comprehensive web-based student record management system built with Next.js, featuring role-based access control, student CRUD operations, and data export capabilities.
 
-First, run the development server:
+## Features
 
+### User Management
+- **Role-based Authentication** (Admin & Staff roles)
+- Secure session management with iron-session
+- Password hashing with bcrypt
+
+### Student Management
+- **Add Students** - Staff and Admin can create new student records
+- **Edit Students** - All authenticated users can update student information
+- **Delete Students** - Admin-only permission for record deletion
+- **Search & Filter** - Real-time search by name, student ID, program, year level, or email
+- **Export to CSV** - Download complete student records
+
+### Student Information Tracking
+- Basic Information (ID, name, email, phone, dates)
+- Philippine Address Format (street, barangay, city, province, postal code)
+- Guardian Information
+- Academic Details (program, year level, status)
+- Status Management (active, inactive, graduated)
+
+### UI/UX Features
+- Responsive design with Tailwind CSS
+- Real-time search functionality
+- Modal dialogs with blur backdrop
+- Statistics dashboard (total, active, graduated, inactive students)
+- Student ID immutability protection
+
+## Tech Stack
+
+- **Framework:** Next.js 15.5.5 (App Router)
+- **Database:** SQLite with Drizzle ORM
+- **Authentication:** iron-session
+- **Styling:** Tailwind CSS 4
+- **Language:** TypeScript
+
+## Installation
+
+### Prerequisites
+- Node.js 20+ or Bun
+- npm, yarn, pnpm, or bun
+
+### Setup Steps
+
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd student-record-system
+```
+
+2. **Install dependencies**
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+3. **Set up environment variables** (Optional)
+Create a `.env.local` file:
+```env
+SESSION_SECRET=your_secret_key_at_least_32_characters_long
+NODE_ENV=development
+```
+
+4. **Initialize and seed the database**
+```bash
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+```
+
+5. **Run the development server**
 ```bash
 npm run dev
 # or
@@ -14,23 +88,81 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. **Open the application**
+Navigate to [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Default Credentials
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+After running the seed script, use these credentials to login:
 
-## Learn More
+### Admin Account
+- **Username:** `admin`
+- **Password:** `admin123`
+- **Permissions:** Full access (view, add, edit, delete students)
 
-To learn more about Next.js, take a look at the following resources:
+### Staff Account
+- **Username:** `staff`
+- **Password:** `staff123`
+- **Permissions:** View, add, and edit students (cannot delete)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with Turbopack |
+| `npm run build` | Build for production |
+| `npm start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm run db:generate` | Generate database migrations |
+| `npm run db:migrate` | Run database migrations |
+| `npm run db:seed` | Seed database with default users and sample data |
 
-## Deploy on Vercel
+## Database Schema
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Users Table
+- id, username, passwordHash, role, createdAt, updatedAt
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Students Table
+- id, studentId (unique), fullName, email, phone, dateOfBirth, enrollmentDate
+- Address: street, barangay, city, province, postalCode
+- Guardian: guardianName, guardianPhone
+- Academic: program, yearLevel, status
+- Timestamps: createdAt, updatedAt
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/              # API routes
+│   │   ├── auth/         # Authentication endpoints
+│   │   └── students/     # Student CRUD endpoints
+│   ├── dashboard/        # Main dashboard page
+│   ├── login/            # Login page
+│   └── page.tsx          # Home page (redirects to dashboard)
+├── components/           # React components
+│   ├── DeleteConfirm.tsx # Delete confirmation modal
+│   ├── Header.tsx        # Navigation header
+│   ├── StudentForm.tsx   # Add/Edit student form
+│   └── StudentTable.tsx  # Student data table
+├── db/                   # Database configuration
+│   ├── index.ts          # Database connection
+│   ├── schema.ts         # Drizzle schema
+│   └── seed.ts           # Seed script
+└── lib/                  # Utility functions
+    ├── auth.ts           # Authentication helpers
+    └── password.ts       # Password hashing
+```
+
+## Security Features
+
+- Password hashing with bcrypt
+- HTTP-only secure session cookies
+- Role-based access control (RBAC)
+- Input validation on API endpoints
+- Student ID immutability after creation
+- CSRF protection via session-based auth
+
+## License
+
+MIT
